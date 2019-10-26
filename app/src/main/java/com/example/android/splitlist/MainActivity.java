@@ -117,12 +117,19 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mTabAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         highLightCurrentTab(0);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            @Override
+            public void onPageSelected(int position) {
+                highLightCurrentTab(position);
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) { }
+        });
+
         // [END] Tab Layout
-
-
-
-
-
 
     }
 
