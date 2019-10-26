@@ -1,4 +1,4 @@
-package com.example.android.splitlist.ui.main;
+package com.example.android.splitlist.ui.main.groceryList;
 
 import android.util.Log;
 import android.view.View;
