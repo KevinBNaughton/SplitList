@@ -52,6 +52,13 @@ public class ListFragment extends Fragment {
         return view;
     }
 
+    // For Anna, call function to open dialog
+    private void newItemDialog() {
+        NewItemDialog dialog = new NewItemDialog();
+        dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.dialog_new_item));
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
