@@ -39,11 +39,13 @@ public class ListFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.list_recyclerview);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
+
+        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 newItemDialog();
             }
         });
@@ -82,6 +84,17 @@ public class ListFragment extends Fragment {
     }
 
     private void addTestItem() {
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+
         mGroceryList.add("Milk!");
         mGroceryList.add("Eggs!");
         mGroceryList.add("Milk!");
