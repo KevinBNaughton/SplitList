@@ -42,8 +42,9 @@ public class ListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                newItemDialog();
             }
         });
 
@@ -52,13 +53,6 @@ public class ListFragment extends Fragment {
         addTestItem();
 
         return view;
-    }
-
-    // For Anna, call function to open dialog
-    private void newItemDialog() {
-        NewItemDialog dialog = new NewItemDialog();
-        dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.dialog_new_item));
-
     }
 
     @Override
@@ -100,5 +94,10 @@ public class ListFragment extends Fragment {
         mGroceryList.add("Eggs!");
 
         mListAdapter.notifyDataSetChanged();
+    }
+
+    private void newItemDialog() {
+        NewItemDialog dialog = new NewItemDialog();
+        dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.dialog_new_item));
     }
 }
