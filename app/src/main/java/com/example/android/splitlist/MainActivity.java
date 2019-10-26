@@ -147,13 +147,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case R.id.nav_logout: {
-                Toast.makeText(this, "Logout Selected!", Toast.LENGTH_SHORT).show();
-                //SIGN OUT
-                //signOut();
+                //Toast.makeText(this, "Logout Selected!", Toast.LENGTH_SHORT).show();
+                //LOG OUT
+                logOut();
                 break;
             }
         }
 
+    }
+
+    private void logOut() {
+        // Firebase sign out
+        mFirebaseAuth.signOut();
+        loadLogInView();
     }
 
     //Position of tab, 0 1 or 2.

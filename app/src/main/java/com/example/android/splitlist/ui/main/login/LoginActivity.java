@@ -34,6 +34,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
@@ -163,15 +165,13 @@ public class LoginActivity extends AppCompatActivity {
 //                                                        }
 //                                                    }
 //                                                });
-//                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//                                        DocumentReference newUser = db
-//                                                .collection("users")
-//                                                .document(user.getUid());
-//                                        HashMap<String, String> userMap = new HashMap<String, String>();
-//                                        userMap.put("privacy_default", "public");
-//                                        userMap.put("fullName", mName);
-//                                        userMap.put("user_id", newUser.getId());
-//                                        newUser.set(userMap);
+                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                        DocumentReference newUser = db
+                                                .collection("users")
+                                                .document(user.getUid());
+                                        HashMap<String, String> userMap = new HashMap<String, String>();
+                                        userMap.put("user_id", newUser.getId());
+                                        newUser.set(userMap);
                                         updateUI(user);
                                     } else {
                                         // If sign in fails, display a message to the user.
