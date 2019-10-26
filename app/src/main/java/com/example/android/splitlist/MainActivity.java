@@ -1,11 +1,10 @@
 package com.example.android.splitlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.android.splitlist.ui.main.ListFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
@@ -15,13 +14,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.Menu;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import com.example.android.splitlist.ui.main.SectionsPagerAdapter;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -29,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     //Navigation Draw
     private NavigationView mNavigationView;
     private DrawerLayout mDrawerLayout;
-    private RecyclerView mPostList;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private Toolbar mToolbar;
     private TextView mProfileName;
@@ -82,13 +79,12 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawable_layout);
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         View navView = mNavigationView.inflateHeaderView(R.layout.navigation_header);
-        mTutorialSwitch = (Switch) findViewById(R.id.nav_tutorial);
         mProfileName = (TextView) navView.findViewById(R.id.profile_name);
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                //NavDrawerMenuSelector(item);
+                NavDrawerMenuSelector(item);
                 return false;
             }
         });
@@ -96,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("SplitList");
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
+        mActionBarDrawerToggle.syncState();
         // [END] Navigation Drawer
 
         // [START] Tab Layout
@@ -112,10 +111,40 @@ public class MainActivity extends AppCompatActivity {
         highLightCurrentTab(0);
         // [END] Tab Layout
 
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
-        mActionBarDrawerToggle.syncState();
+
+
+
+
+
     }
 
+    private void NavDrawerMenuSelector(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.nav_home: {
+                //Go HOME
+                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(intent);
+                break;
+            }
+            case R.id.nav_groups: {
+                Toast.makeText(this, "Groups Selected!", Toast.LENGTH_SHORT).show();
+                //VIEW FRIENDS
+                break;
+            }
+            case R.id.nav_settings: {
+                Toast.makeText(this, "Settings Selected!", Toast.LENGTH_SHORT).show();
+                //SWITCH SETTINGS ACTIVITY
+                break;
+            }
+            case R.id.nav_logout: {
+                Toast.makeText(this, "Logout Selected!", Toast.LENGTH_SHORT).show();
+                //SIGN OUT
+                //signOut();
+                break;
+            }
+        }
+
+    }
 
     //Position of tab, 0 1 or 2.
     private void highLightCurrentTab(int position) {
