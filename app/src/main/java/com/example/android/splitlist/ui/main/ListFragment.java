@@ -40,9 +40,6 @@ public class ListFragment extends Fragment {
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
 
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
