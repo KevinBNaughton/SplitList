@@ -23,8 +23,6 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
     public void setData(String name) {
         mItemName.setText(name);
         mLikes.setText("1");
-
-        Log.d("please set data", name);
     }
 
 }
