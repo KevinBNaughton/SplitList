@@ -56,10 +56,6 @@ public class NewItemDialog extends DialogFragment implements View.OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_new_item, container, false);
-        mTitle = view.findViewById(R.id.item_title);
-        mContent = view.findViewById(R.id.item_content);
-        mCreate = view.findViewById(R.id.create);
-        mCancel = view.findViewById(R.id.cancel);
 
         //FirebaseFirestore db = FirebaseFirestore.getInstance();
         //DocumentReference user = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -71,31 +67,31 @@ public class NewItemDialog extends DialogFragment implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-
-            case R.id.create:{
-
-                // insert the new note
-
-                String title = mTitle.getText().toString();
-                String content = mContent.getText().toString();
-
-                if(!title.equals("")) {
-
-                    //THIS IS THE FUNCTION TO CREATE A NEW ITEM IN THE LIST
-                    //mIMapsActivity.createNewLocationNote(title, content, latlng, color, locationCheck, radius, privacy);
-                    getDialog().dismiss();
-                } else {
-                    Toast.makeText(getActivity(), "Enter a title", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            }
-
-            case R.id.cancel:{
-                getDialog().dismiss();
-                break;
-            }
-        }
+//        switch (view.getId()){
+//
+//            case R.id.create:{
+//
+//                // insert the new note
+//
+//                String title = mTitle.getText().toString();
+//                String content = mContent.getText().toString();
+//
+//                if(!title.equals("")) {
+//
+//                    //THIS IS THE FUNCTION TO CREATE A NEW ITEM IN THE LIST
+//                    //mIMapsActivity.createNewLocationNote(title, content, latlng, color, locationCheck, radius, privacy);
+//                    getDialog().dismiss();
+//                } else {
+//                    Toast.makeText(getActivity(), "Enter a title", Toast.LENGTH_SHORT).show();
+//                }
+//                break;
+//            }
+//
+//            case R.id.cancel:{
+//                getDialog().dismiss();
+//                break;
+//            }
+//        }
     }
 
     @Override

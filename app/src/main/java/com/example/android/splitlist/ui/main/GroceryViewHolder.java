@@ -11,17 +11,18 @@ import com.example.android.splitlist.R;
 public class GroceryViewHolder extends RecyclerView.ViewHolder {
 
     private TextView mItemName;
+    private TextView mLikes;
 
     public GroceryViewHolder(View v) {
         super(v);
 
         mItemName = v.findViewById(R.id.item_name);
+        mLikes = v.findViewById(R.id.num_upvotes);
     }
 
     public void setData(String name) {
         mItemName.setText(name);
-
-        Log.d("please set data", name);
+        mLikes.setText("1");
     }
 
 }

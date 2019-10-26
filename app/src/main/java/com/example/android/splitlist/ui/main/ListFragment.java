@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.android.splitlist.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,18 +38,23 @@ public class ListFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.list_recyclerview);
 
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+
+        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newItemDialog();
+            }
+        });
+
         setUpList();
 
         addTestItem();
 
         return view;
-    }
-
-    // For Anna, call function to open dialog
-    private void newItemDialog() {
-        NewItemDialog dialog = new NewItemDialog();
-        dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.dialog_new_item));
-
     }
 
     @Override
@@ -79,7 +86,31 @@ public class ListFragment extends Fragment {
     private void addTestItem() {
         mGroceryList.add("Milk!");
         mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
+        mGroceryList.add("Milk!");
+        mGroceryList.add("Eggs!");
 
         mListAdapter.notifyDataSetChanged();
+    }
+
+    private void newItemDialog() {
+        NewItemDialog dialog = new NewItemDialog();
+        dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.dialog_new_item));
     }
 }
