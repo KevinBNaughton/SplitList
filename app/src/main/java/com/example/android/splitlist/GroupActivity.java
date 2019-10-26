@@ -18,6 +18,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,28 +95,29 @@ public class GroupActivity extends AppCompatActivity {
                     public void finish(String result) {
                         Log.d(TAG, "result: " + result);
                         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                        final DocumentReference newGroupRef = db
-                                .collection("groups")
-                                .document();
                         final String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("group_name", result);
-                        newGroupRef.set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        final CollectionReference joinGroupReg = db.collection("groups");
+                        Query groups = db.collection("groups").whereEqualTo("group_name", result);
+                        groups.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()) {
-                                    String group_id = newGroupRef.getId();
-                                    Map<String, Object> dat = new HashMap<>();
-                                    dat.put("user_id", userId);
-                                    db.collection("groups").document(group_id)
-                                            .collection("users").document(userId).set(dat).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            Log.d(TAG, "Somehow, it worked");
-                                        }
-                                    });
-                                } else{
-                                    Toast.makeText(GroupActivity.this, "Group not created, notify support.", Toast.LENGTH_SHORT).show();
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d(TAG, "data: " + document.getData());
+                                        Log.d(TAG, "id: " + document.getId());
+                                        Map<String, Object> dat = new HashMap<>();
+                                        dat.put("user_id", userId);
+                                        db.collection("groups").document(document.getId())
+                                                .collection("users").document(userId).set(dat).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Log.d(TAG, "Somehow, it worked");
+                                            }
+                                        });
+                                        break;
+                                    }
+                                } else {
+                                    Log.e(TAG, "failed");
                                 }
                             }
                         });

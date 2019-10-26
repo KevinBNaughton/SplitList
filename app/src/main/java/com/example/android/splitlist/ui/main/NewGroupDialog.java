@@ -56,7 +56,7 @@ public class NewGroupDialog extends DialogFragment {
         mCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = mName.getText().toString();
+                String name = mName.getText().toString().trim();
                 mDialogResult.finish(name);
                 dismiss();
             }
