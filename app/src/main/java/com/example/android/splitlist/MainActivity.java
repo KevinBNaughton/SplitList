@@ -143,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.nav_groups: {
                 Toast.makeText(this, "Groups Selected!", Toast.LENGTH_SHORT).show();
-                //VIEW FRIENDS
+                Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_settings: {
