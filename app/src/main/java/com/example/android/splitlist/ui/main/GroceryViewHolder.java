@@ -15,7 +15,7 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
     public GroceryViewHolder(View v) {
         super(v);
 
-        mItemName = v.findViewById(R.id.name);
+        mItemName = v.findViewById(R.id.item_name);
     }
 
     public void setData(String name) {
