@@ -6,6 +6,10 @@ import android.os.Bundle;
 import com.example.android.splitlist.ui.main.ListFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -15,11 +19,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -48,6 +58,42 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+
+        OkHttpClient client = new OkHttpClient();
+        String baseUrl = "https://api-reg-apigee.ncrsilverlab.com";
+
+        Request request = new Request.Builder()
+                .url(baseUrl+"/v2/oauth2/token")
+                .header("client_id","gt_furrowed_eyebrow")
+                .header("client_secret","00340075-0043-0050-7600-260041005200")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String myResponse = response.body().string();
+                    try {
+                        JSONObject reader = new JSONObject(myResponse);
+                        JSONObject result  = reader.getJSONObject("Result");
+                        String token = result.getString("AccessToken");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+
+
 
 
         // *** This is for checking if user is logged in on app launch, enable later
@@ -158,7 +204,5 @@ public class MainActivity extends AppCompatActivity {
         tab.setCustomView(null);
         tab.setCustomView(mTabAdapter.getSelectedTabView(position));
     }
-
-
 
 }
