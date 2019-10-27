@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">SplitList</string>
+    <string name="app_name" translatable="false">SplitList</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>
 
     <!-- Top App Bar Drawer Open Close -->
     <string name="open_drawer">Open Drawer</string>
-    <string name="close_drawer">Close Drawer</string>
+    <string name="close_drawer" translatable="false">Close Drawer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -14,21 +14,21 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_verify">Verify Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_register">Register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_in" translatable="false">Sign in</string>
+    <string name="action_register" translatable="false">Register</string>
+    <string name="action_sign_in_short" translatable="false">Sign in</string>
     <string name="welcome">"Welcome!"</string>
     <string name="login_error_message">Please make sure you entered an email and password!</string>
     <string name="login_error_message2">Please make sure your passwords match!</string>
     <string name="login_error_title">Account not found</string>
     <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_password" translatable="false">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_main2">Main2Activity</string>
 
-    <string name="dialog_new_item">New Item Dialog</string>
-    <string name="dialog_new_group">New Group Dialog</string>
-    <string name="dialog_join_group">Join Group Dialog</string>
+    <string name="dialog_new_item" translatable="false">New Item Dialog</string>
+    <string name="dialog_new_group" translatable="false">New Group Dialog</string>
+    <string name="dialog_join_group" translatable="false">Join Group Dialog</string>
 
 
 </resources>
