@@ -109,7 +109,7 @@ public class NewItemDialog extends DialogFragment {
         OkHttpClient client = new OkHttpClient();
 
         Request inventoryRequest = new Request.Builder()
-                .url(baseUrl + "/v2/inventory/items")
+                .url(baseUrl + "/v2/inventory/items?limit=138")
                 .header("Authorization","Bearer " + token)
                 .build();
 
@@ -126,6 +126,7 @@ public class NewItemDialog extends DialogFragment {
                     try {
                         JSONObject reader = new JSONObject(myResponse);
                         JSONArray result = reader.getJSONArray("Result");
+                        Log.d(TAG, "Length: " + result.length());
                         for (int i = 0; i < result.length(); i++) {
                             JSONObject newItem = result.getJSONObject(i);
                             mNewItems.add(new Item(newItem.getString("Name"),
