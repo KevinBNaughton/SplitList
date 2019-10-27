@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -53,7 +54,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
 
     public View getTabView(int position) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_tab, null);
-            TextView tabTextView = view.findViewById(R.id.tabTextView);
+        TextView tabTextView = view.findViewById(R.id.tabTextView);
         tabTextView.setText(mFragmentTitleList.get(position));
         ImageView tabImageView = view.findViewById(R.id.tabImageView);
         tabImageView.setImageResource(mFragmentIconList.get(position));
