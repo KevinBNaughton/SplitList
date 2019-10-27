@@ -88,7 +88,7 @@ public class NewItemDialog extends DialogFragment {
 
     private void setUpRecyclerView(View view) {
 
-        mRecyclerView = view.findViewById(R.id.new_item_list);
+        mRecyclerView = view.findViewById(R.id.new_item_row);
 
         mRecyclerView.setHasFixedSize(false);
 
