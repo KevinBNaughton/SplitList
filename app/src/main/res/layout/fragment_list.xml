@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/list_recyclerview">
+
     </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,6 +17,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin" />
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@mipmap/plus_icon"
+        app:hoveredFocusedTranslationZ="6dp"
+        app:maxImageSize="50dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
