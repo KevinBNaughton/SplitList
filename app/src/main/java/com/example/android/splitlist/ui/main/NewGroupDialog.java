@@ -48,7 +48,7 @@ public class NewGroupDialog extends DialogFragment {
         //FirebaseFirestore db = FirebaseFirestore.getInstance();
         //DocumentReference user = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        getDialog().setTitle("Enter New Group Name!");
+        getDialog().setTitle("Please Enter A New Group Name.");
 
         mName = view.findViewById(R.id.group_name);
         mCreate = view.findViewById(R.id.create);
