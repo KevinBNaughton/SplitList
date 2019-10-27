@@ -38,10 +38,18 @@ public class ListFragment extends Fragment {
      private ArrayList<String> mGroceryList = new ArrayList<>();
      private GroceryListAdapter mListAdapter;
      private SwipeRefreshLayout mSwipeRefreshLayout;
+     private String token;
+     private String baseUrl;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+
+        Bundle b = this.getArguments();
+        if (b != null) {
+            token = b.getString("token");
+            baseUrl = b.getString("baseUrl");
+        }
 
         mRecyclerView = view.findViewById(R.id.list_recyclerview);
 
@@ -86,6 +94,32 @@ public class ListFragment extends Fragment {
     }
 
     private void addTestItem() {
+        OkHttpClient client = new OkHttpClient();
+
+        Request inventoryRequest = new Request.Builder()
+                .url(baseUrl + "/v2/inventory/items")
+                .header("Authorization","Bearer " + token)
+                .build();
+
+        client.newCall(inventoryRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String myResponse = response.body().string();
+                    try {
+                        JSONObject reader = new JSONObject(myResponse);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
         mGroceryList.add("Milk!");
         mGroceryList.add("Eggs!");
 

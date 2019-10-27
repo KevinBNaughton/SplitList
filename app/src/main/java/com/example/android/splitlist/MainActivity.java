@@ -1,6 +1,7 @@
 package com.example.android.splitlist;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.android.splitlist.ui.main.ListFragment;
@@ -28,7 +29,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-<<<<<<< HEAD
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,48 +61,13 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.ic_favorites
     };
 
+    private Bundle b = new Bundle();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-
-        OkHttpClient client = new OkHttpClient();
-        String baseUrl = "https://api-reg-apigee.ncrsilverlab.com";
-
-        Request request = new Request.Builder()
-                .url(baseUrl+"/v2/oauth2/token")
-                .header("client_id","gt_furrowed_eyebrow")
-                .header("client_secret","00340075-0043-0050-7600-260041005200")
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Request request, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String myResponse = response.body().string();
-                    try {
-                        JSONObject reader = new JSONObject(myResponse);
-                        JSONObject result  = reader.getJSONObject("Result");
-                        String token = result.getString("AccessToken");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-
-
-
 
 
         // *** This is for checking if user is logged in on app launch, enable later
@@ -129,6 +94,46 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void init() {
+        OkHttpClient client = new OkHttpClient();
+        b.putString("baseUrl", "https://api-reg-apigee.ncrsilverlab.com");
+
+        Request tokenRequest = new Request.Builder()
+                .url(b.get("baseUrl") + "/v2/oauth2/token")
+                .header("client_id", "gt_552465")
+                .header("client_secret", "00340075-0043-0050-7600-260041005200")
+                .build();
+
+        client.newCall(tokenRequest).
+                enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            String myResponse = response.body().string();
+                            try {
+                                JSONObject reader = new JSONObject(myResponse);
+                                JSONObject result = reader.getJSONObject("Result");
+                                b.putString("token", result.getString("AccessToken"));
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        fragmentHelper();
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void fragmentHelper() {
         // [START] Navigation Drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawable_layout);
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -155,21 +160,20 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        mTabAdapter = new TabAdapter(getSupportFragmentManager(), this);
-        mTabAdapter.addFragment(new ListFragment(), "List", tabIcons[0]);
-        mTabAdapter.addFragment(new ListFragment(), "Checkout", tabIcons[1]);
-        mTabAdapter.addFragment(new ListFragment(), "Favorites", tabIcons[2]);
-
+        mTabAdapter = new TabAdapter(getSupportFragmentManager(), getApplicationContext());
+        ListFragment list = new ListFragment();
+        list.setArguments(b);
+        mTabAdapter.addFragment(list, "List", tabIcons[0]);
+//        ListFragment checkout = new ListFragment();
+//        list.setArguments(b);
+//        mTabAdapter.addFragment(checkout, "Checkout", tabIcons[1]);
+//        ListFragment favorites =  new ListFragment();
+//        favorites.setArguments(b);
+//        mTabAdapter.addFragment(favorites, "Favorites", tabIcons[2]);
         mViewPager.setAdapter(mTabAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         highLightCurrentTab(0);
         // [END] Tab Layout
-
-
-
-
-
-
     }
 
     private void NavDrawerMenuSelector(MenuItem item) {
