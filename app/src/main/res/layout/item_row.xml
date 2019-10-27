@@ -4,18 +4,29 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
+        <ImageButton
+            android:id="@+id/favorite_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="@dimen/normal_margin"
+            android:layout_marginLeft="@dimen/large_margin"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="@null"
+            android:scaleType="centerCrop"
+            app:srcCompat="@mipmap/empty_star" />
+
         <TextView
             android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/large_margin"
             android:textSize="22sp"
             android:textColor="@android:color/black"
             android:gravity="center_vertical"
-            android:fadingEdge="horizontal"
-            android:layout_alignParentStart="true"
-            android:singleLine="true"
+            android:layout_toRightOf="@+id/favorite_button"
+            android:layout_toLeftOf="@+id/heart_button"
+            android:singleLine="false"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
             android:scrollHorizontally="true"
@@ -30,7 +41,7 @@
             android:layout_margin="@dimen/normal_margin"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:layout_toLeftOf="@id/cancel_button"
+            android:layout_toLeftOf="@id/move_to_checkout_button"
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/heart_filled_icon" />
 
@@ -43,14 +54,14 @@
             android:layout_marginTop="@dimen/normal_margin"
             android:layout_marginEnd="@dimen/normal_margin"
             android:layout_marginBottom="@dimen/normal_margin"
-            android:layout_toLeftOf="@+id/cancel_button"
+            android:layout_toLeftOf="@+id/move_to_checkout_button"
             android:gravity="center"
             android:text="4"
             android:textColor="@color/White"
             android:textSize="14sp" />
 
         <ImageButton
-            android:id="@+id/cancel_button"
+            android:id="@+id/move_to_checkout_button"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginRight="@dimen/large_margin"
@@ -58,6 +69,6 @@
             android:background="@null"
             android:layout_alignParentEnd="true"
             android:scaleType="centerCrop"
-            app:srcCompat="@mipmap/cancel_icon" />
+            android:src="@mipmap/shopping_cart" />
 
 </RelativeLayout>

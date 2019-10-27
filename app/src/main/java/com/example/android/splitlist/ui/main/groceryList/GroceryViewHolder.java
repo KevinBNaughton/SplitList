@@ -1,7 +1,5 @@
 package com.example.android.splitlist.ui.main.groceryList;
 
-import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageButton;
@@ -16,46 +14,50 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
 
     private TextView mItemName;
     private TextView mLikes;
-    private DeleteItemListener mDeleteListener;
+    private CheckoutItemListener mCheckoutListener;
     private LikeItemListener mLikeListener;
-    private SwipeItemListener mSwipeListener;
+    private FavoriteItemListener mFavoriteListener;
 
     private Item mItem;
-    private Context mContext;
 
-    public GroceryViewHolder(Context context, View v, DeleteItemListener deleteListener, LikeItemListener likeListener, SwipeItemListener swipeListener) {
+    public GroceryViewHolder(View v, CheckoutItemListener deleteListener, LikeItemListener likeListener, FavoriteItemListener favoriteListener) {
         super(v);
 
-        mContext = context;
 
         mItemName = v.findViewById(R.id.item_name);
         mLikes = v.findViewById(R.id.num_upvotes);
 
-        mDeleteListener = deleteListener;
+        mCheckoutListener = deleteListener;
         mLikeListener = likeListener;
-        mSwipeListener = swipeListener;
+        mFavoriteListener = favoriteListener;
 
-        ImageButton delete = v.findViewById(R.id.cancel_button);
+        ImageButton toCheckout = v.findViewById(R.id.move_to_checkout_button);
 
         final ImageButton likeButton = v.findViewById(R.id.heart_button);
 
-        delete.setOnClickListener(new View.OnClickListener() {
+        toCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDeleteListener != null) {
+                if (mCheckoutListener != null) {
 
-                    //TODO: put in logic to check if the user is currently buying the list before they can remove it
 
-                        mItem.setLikeNumber(mItem.getLikeNumber() - 1);
+                    mCheckoutListener.onItemCheckout(mItem);
 
-                        if (mItem.getLikeNumber() > 0) {
-                            likeButton.setImageResource(R.mipmap.heart_empty_icon);
-                            mLikes.setTextColor(Color.BLACK);
-                            mLikes.setText(String.valueOf(mItem.getLikeNumber()));
-                        }
 
-                        mDeleteListener.onItemDelete(mItem);
-                    }
+                    //TODO: moving this to be incorrporated with the like button
+
+//                        mItem.setLikeNumber(mItem.getLikeNumber() - 1);
+//
+//                        if (mItem.getLikeNumber() > 0) {
+//                            likeButton.setImageResource(R.mipmap.heart_empty_icon);
+//                            mLikes.setTextColor(Color.BLACK);
+//                            mLikes.setText(String.valueOf(mItem.getLikeNumber()));
+//                        }
+//
+//                        mDeleteListener.onItemDelete(mItem);
+//                    }
+                }
+                ;
             }
         });
 
@@ -78,26 +80,25 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
                 }
         });
 
-        v.setOnTouchListener(new OnSwipeTouchListener(mContext) {
-//            public void onSwipeTop() {
-//                Toast.makeText(MyActivity.this, "top", Toast.LENGTH_SHORT).show();
-//            }
-            public void onSwipeRight() {
+        final ImageButton favorite = v.findViewById(R.id.favorite_button);
 
-                if (mSwipeListener != null) {
-                    mSwipeListener.moveToCheckout(mItem);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mFavoriteListener != null) {
+
+                    if (mItem.getFavorite()) {
+                        favorite.setImageResource(R.mipmap.empty_star);
+                        mItem.setFavorite(false);
+                    } else {
+                        favorite.setImageResource(R.mipmap.filled_star);
+                        mItem.setFavorite(true);
+                    }
+
+                    mFavoriteListener.onFavorite(mItem);
+
                 }
-
             }
-            public void onSwipeLeft() {
-                if (mSwipeListener != null) {
-                    mSwipeListener.moveToCheckout(mItem);
-                }
-            }
-//            public void onSwipeBottom() {
-//                Toast.makeText(MyActivity.this, "bottom", Toast.LENGTH_SHORT).show();
-//            }
-
         });
 
     }
@@ -111,3 +112,4 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
     }
 
 }
+
