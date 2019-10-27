@@ -48,6 +48,11 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (mLikeListener != null) {
+
+                    mItem.setLikeNumber(mItem.getLikeNumber() + 1);
+
+                    mLikes.setText(String.valueOf(mItem.getLikeNumber()));
+
                     mLikeListener.onItemLiked(mItem);
                 }
             }

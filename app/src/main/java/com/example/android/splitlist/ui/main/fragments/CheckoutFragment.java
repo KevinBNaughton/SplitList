@@ -1,4 +1,4 @@
-package com.example.android.splitlist.ui.main.checkoutList;
+package com.example.android.splitlist.ui.main.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.android.splitlist.R;
+import com.example.android.splitlist.ui.main.checkoutList.CheckoutListAdapter;
 import com.example.android.splitlist.ui.main.data.model.Item;
-import com.example.android.splitlist.ui.main.groceryList.GroceryListAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 

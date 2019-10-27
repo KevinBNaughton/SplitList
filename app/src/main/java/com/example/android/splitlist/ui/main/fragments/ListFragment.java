@@ -1,4 +1,4 @@
-package com.example.android.splitlist.ui.main;
+package com.example.android.splitlist.ui.main.fragments;
 
 import android.os.Bundle;
 
