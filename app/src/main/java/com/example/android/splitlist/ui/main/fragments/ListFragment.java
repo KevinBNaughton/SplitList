@@ -18,10 +18,10 @@ import android.view.ViewGroup;
 
 import com.example.android.splitlist.R;
 import com.example.android.splitlist.ui.main.data.model.Item;
-import com.example.android.splitlist.ui.main.groceryList.DeleteItemListener;
+import com.example.android.splitlist.ui.main.groceryList.CheckoutItemListener;
+import com.example.android.splitlist.ui.main.groceryList.FavoriteItemListener;
 import com.example.android.splitlist.ui.main.groceryList.GroceryListAdapter;
 import com.example.android.splitlist.ui.main.groceryList.LikeItemListener;
-import com.example.android.splitlist.ui.main.groceryList.SwipeItemListener;
 import com.example.android.splitlist.ui.main.newItemsList.NewItemDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -34,10 +34,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
@@ -135,10 +131,10 @@ public class ListFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
 
         mGroceryList = new ArrayList<>();
-        mListAdapter = new GroceryListAdapter(getContext(), mGroceryList);
+        mListAdapter = new GroceryListAdapter(mGroceryList);
         mRecyclerView.setAdapter(mListAdapter);
 
-        mListAdapter.setListenerCallbacks(new OnDeleteListenerHandler(), new OnLikeListenerHandler(), new OnSwipeListenerHandler());
+        mListAdapter.setListenerCallbacks(new OnCheckoutListenerHandler(), new OnLikeListenerHandler(), new OnFavoriteListenerHandler());
     }
 
     public void addItem(Item item) {
@@ -167,14 +163,14 @@ public class ListFragment extends Fragment {
         });
     }
 
-    class OnDeleteListenerHandler extends DeleteItemListener {
+    class OnCheckoutListenerHandler extends CheckoutItemListener {
         @Override
-        public void onItemDelete(Item item) {
-            Log.d("ListFragment", "Is hitting the remove click method");
+        public void onItemCheckout(Item item) {
+            Log.d("ListFragment", "Is hitting the remove checkout method");
 
-            if (item.getLikeNumber() == 0) {
-                checkForDelete(item);
-            }
+            //TODO: need to do database stuffs here
+            item.setCheckout(true);
+
         }
     }
 
@@ -185,17 +181,17 @@ public class ListFragment extends Fragment {
         }
     }
 
-    class OnSwipeListenerHandler extends SwipeItemListener {
+    class OnFavoriteListenerHandler extends FavoriteItemListener {
         @Override
-        public void moveToCheckout(Item item) {
+        public void onFavorite(Item item) {
+            Log.d("ListFragmnet", "Is hitting the favorite method");
 
-            Log.d("ListFragment", "Is hitting the swipe listener method");
-
-            //TODO: this swipe listener doesn't work
-            removeItem(item);
+            //TODO: need logic here to do database stuff
         }
     }
 
+
+    //TODO: this is going to be moved to item liked method
     public void checkForDelete(final Item item){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
 

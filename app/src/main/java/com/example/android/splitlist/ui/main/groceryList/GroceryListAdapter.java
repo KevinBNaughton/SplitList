@@ -1,6 +1,5 @@
 package com.example.android.splitlist.ui.main.groceryList;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -17,14 +16,12 @@ import java.util.List;
 public class GroceryListAdapter extends RecyclerView.Adapter<GroceryViewHolder> {
 
     private List<Item> mGroceryList;
-    private DeleteItemListener mDeleteListener;
+    private CheckoutItemListener mDeleteListener;
     private LikeItemListener mLikeListener;
-    private SwipeItemListener mSwipeListener;
-    private Context mContext;
+    private FavoriteItemListener mFavoriteListener;
 
-    public GroceryListAdapter(Context context, ArrayList<Item> groceryList) {
+    public GroceryListAdapter(ArrayList<Item> groceryList) {
         mGroceryList = groceryList;
-        mContext = context;
     }
 
     @Override
@@ -32,7 +29,7 @@ public class GroceryListAdapter extends RecyclerView.Adapter<GroceryViewHolder> 
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_row, parent, false);
 
-        GroceryViewHolder viewHolder = new GroceryViewHolder(mContext, v, mDeleteListener, mLikeListener, mSwipeListener);
+        GroceryViewHolder viewHolder = new GroceryViewHolder(v, mDeleteListener, mLikeListener, mFavoriteListener);
         return viewHolder;
     }
 
@@ -52,11 +49,11 @@ public class GroceryListAdapter extends RecyclerView.Adapter<GroceryViewHolder> 
         return mGroceryList.size();
     }
 
-    public void setListenerCallbacks(DeleteItemListener deleteListener, LikeItemListener likeListener, SwipeItemListener swipeListener) {
+    public void setListenerCallbacks(CheckoutItemListener deleteListener, LikeItemListener likeListener, FavoriteItemListener favoriteListener) {
 
         mDeleteListener = deleteListener;
         mLikeListener = likeListener;
-        mSwipeListener = swipeListener;
+        mFavoriteListener = favoriteListener;
 
     }
 }

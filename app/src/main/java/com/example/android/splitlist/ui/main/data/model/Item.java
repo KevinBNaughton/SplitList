@@ -11,6 +11,9 @@ public class Item {
     private ArrayList<Integer> mUsers;
     private boolean mCheckout;
 
+    //TODO: need in database?
+    private boolean mFavorite;
+
     public Item() {
 
     }
@@ -22,6 +25,7 @@ public class Item {
         mMasterId = id;
         mLikeNumber = 1;
         mCheckout = false;
+        mFavorite = false;
 
         if (mUsers == null) {
             mUsers = new ArrayList<>();
@@ -76,6 +80,14 @@ public class Item {
 
     public void setCheckout(boolean mCheckout) {
         this.mCheckout = mCheckout;
+    }
+
+    public boolean getFavorite() {
+        return mFavorite;
+    }
+
+    public void setFavorite(boolean mFavorite) {
+        this.mFavorite = mFavorite;
     }
 
 }
