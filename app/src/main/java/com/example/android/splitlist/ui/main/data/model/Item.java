@@ -10,7 +10,7 @@ public class Item {
     private int mLikeNumber;
     private ArrayList<Integer> mUsers;
 
-    public Item(String name, double price, int id, int userId) {
+    public Item(String name, double price, int id) {
 
         mItemName = name;
         mPrice = price;
@@ -20,8 +20,6 @@ public class Item {
         if (mUsers == null) {
             mUsers = new ArrayList<>();
         }
-
-        mUsers.add(userId);
     }
 
     public String getItemName() {
@@ -60,8 +58,12 @@ public class Item {
         return mUsers;
     }
 
-    public void setUsers(ArrayList<Integer> mUsers) {
-        this.mUsers = mUsers;
+    public void addUser(int mUser) {
+        mUsers.add(mUser);
+    }
+
+    public void removeUser(int mUser) {
+        mUsers.remove(mUser);
     }
 
 }

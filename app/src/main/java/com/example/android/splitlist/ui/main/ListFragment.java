@@ -22,6 +22,10 @@ import com.example.android.splitlist.ui.main.groceryList.SwipeItemListener;
 import com.example.android.splitlist.ui.main.newItemsList.NewItemDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ListFragment extends Fragment {
@@ -30,10 +34,13 @@ public class ListFragment extends Fragment {
      private ArrayList<Item> mGroceryList = new ArrayList<>();
      private GroceryListAdapter mListAdapter;
      private SwipeRefreshLayout mSwipeRefreshLayout;
+     private Bundle b;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+
+        b = this.getArguments();
 
         mRecyclerView = view.findViewById(R.id.list_recyclerview);
 
@@ -89,6 +96,7 @@ public class ListFragment extends Fragment {
 
     private void newItemDialog() {
         NewItemDialog dialog = new NewItemDialog();
+        dialog.setArguments(b);
         dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.dialog_new_item));
 
         dialog.setDialogResult(new NewItemDialog.OnMyDialogResult(){
