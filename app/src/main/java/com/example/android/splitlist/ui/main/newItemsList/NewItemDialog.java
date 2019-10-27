@@ -13,9 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.splitlist.R;
 import com.example.android.splitlist.ui.main.ItemClickListener;
+import com.example.android.splitlist.ui.main.data.model.Item;
 import com.example.android.splitlist.ui.main.groceryList.GroceryListAdapter;
 import com.example.android.splitlist.ui.main.newItemsList.NewItemAdapter;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 //import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.firestore.DocumentReference;
@@ -36,9 +46,18 @@ public class NewItemDialog extends DialogFragment {
 
     private OnMyDialogResult mDialogResult;
 
+    private String token;
+    private String baseUrl;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle b = this.getArguments();
+        if (b != null) {
+            token = b.getString("token");
+            baseUrl = b.getString("baseUrl");
+        }
 
         //TODO: fix the theme bc its ugly
         int style = DialogFragment.STYLE_NORMAL;
@@ -83,6 +102,38 @@ public class NewItemDialog extends DialogFragment {
     }
 
     private void popuplateList() {
+        OkHttpClient client = new OkHttpClient();
+
+        Request inventoryRequest = new Request.Builder()
+                .url(baseUrl + "/v2/inventory/items")
+                .header("Authorization","Bearer " + token)
+                .build();
+
+        client.newCall(inventoryRequest).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String myResponse = response.body().string();
+                    try {
+                        JSONObject reader = new JSONObject(myResponse);
+                        JSONArray result = reader.getJSONArray("Result");
+                        for (int i = 0; i < result.length(); i++) {
+                            JSONObject newItem = result.getJSONObject(i);
+                            mNewItems.add(new Item(newItem.getString("Name"),
+                                    newItem.getDouble("RetailPrice"),
+                                    newItem.getInt("ItemMasterId")));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         mNewItems.add("PLEASE");
         mNewItems.add("WORK");
         mNewItems.add("BUYFOODS");
