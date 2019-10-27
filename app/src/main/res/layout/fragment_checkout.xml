@@ -11,6 +11,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
+        android:id="@+id/group_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -21,6 +22,7 @@
         android:layout_margin="@dimen/normal_margin" />
 
     <TextView
+        android:id="@+id/personal_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -29,5 +31,17 @@
         android:textColor="@color/Black"
         android:textSize="16sp"
         android:layout_margin="@dimen/normal_margin" />
+
+    <Button
+        android:id="@+id/complete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="2dp"
+        android:layout_toStartOf="@+id/personal_total"
+        android:layout_toEndOf="@+id/group_total"
+        android:text="Finalize" />
 
 </RelativeLayout>
