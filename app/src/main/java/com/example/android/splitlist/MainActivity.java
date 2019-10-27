@@ -5,10 +5,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.android.splitlist.ui.main.ListFragment;
+import com.example.android.splitlist.ui.main.checkoutList.CheckoutFragment;
 import com.example.android.splitlist.ui.main.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.squareup.okhttp.Callback;
@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,8 +39,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.security.acl.Group;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -167,16 +164,17 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        mTabAdapter = new TabAdapter(getSupportFragmentManager(), getApplicationContext());
+        mTabAdapter = new TabAdapter(getSupportFragmentManager(), this);
+
         ListFragment list = new ListFragment();
         list.setArguments(b);
         mTabAdapter.addFragment(list, "List", tabIcons[0]);
-//        ListFragment checkout = new ListFragment();
-//        list.setArguments(b);
-//        mTabAdapter.addFragment(checkout, "Checkout", tabIcons[1]);
-//        ListFragment favorites =  new ListFragment();
-//        favorites.setArguments(b);
-//        mTabAdapter.addFragment(favorites, "Favorites", tabIcons[2]);
+        CheckoutFragment checkout = new CheckoutFragment();
+        checkout.setArguments(b);
+        mTabAdapter.addFragment(checkout, "Checkout", tabIcons[1]);
+        ListFragment favorites =  new ListFragment();
+        favorites.setArguments(b);
+        mTabAdapter.addFragment(favorites, "Favorites", tabIcons[2]);
         mViewPager.setAdapter(mTabAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         highLightCurrentTab(0);
