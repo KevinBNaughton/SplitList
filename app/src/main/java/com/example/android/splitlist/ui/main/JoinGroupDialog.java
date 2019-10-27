@@ -37,12 +37,12 @@ public class JoinGroupDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_new_group, container, false);
+        View view = inflater.inflate(R.layout.dialog_join_group, container, false);
 
         //FirebaseFirestore db = FirebaseFirestore.getInstance();
         //DocumentReference user = db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        getDialog().setTitle("Enter Existing Group Name!");
+        getDialog().setTitle("Please Enter An Existing Group Name!");
 
         mName = view.findViewById(R.id.group_name);
         mCreate = view.findViewById(R.id.create);
