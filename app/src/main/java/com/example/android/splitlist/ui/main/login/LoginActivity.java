@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.splitlist.GroupActivity;
 import com.example.android.splitlist.MainActivity;
 import com.example.android.splitlist.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailEditText;
     private EditText passwordEditText;
+    private EditText fullnameEditText;
+    private String fullname;
     private Button loginButton;
     private ProgressBar loadingProgressBar;
     private Button registerButton;
@@ -62,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         loadingProgressBar = findViewById(R.id.loading);
         registerButton = findViewById(R.id.register);
         verifypasswordEditText = findViewById(R.id.password_verify);
+        fullnameEditText = findViewById(R.id.fullname);
 
         // Initialize FirebaseAuth
         firebaseAuth = FirebaseAuth.getInstance();
@@ -87,25 +91,25 @@ public class LoginActivity extends AppCompatActivity {
                     loadingProgressBar.setVisibility(View.INVISIBLE);
                 } else {
                     firebaseAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                } else {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                    builder.setMessage(task.getException().getMessage())
-                                            .setTitle(R.string.login_error_title)
-                                            .setPositiveButton(android.R.string.ok, null);
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();
-                                    loadingProgressBar.setVisibility(View.INVISIBLE);
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    } else {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                        builder.setMessage(task.getException().getMessage())
+                                                .setTitle(R.string.login_error_title)
+                                                .setPositiveButton(android.R.string.ok, null);
+                                        AlertDialog dialog = builder.create();
+                                        dialog.show();
+                                        loadingProgressBar.setVisibility(View.INVISIBLE);
+                                    }
                                 }
-                            }
-                        });
+                            });
                 }
             }
         });
@@ -115,16 +119,18 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (verifypasswordEditText.getVisibility() == View.INVISIBLE) {
                     verifypasswordEditText.setVisibility(View.VISIBLE);
+                    fullnameEditText.setVisibility(View.VISIBLE);
                 } else {
                     String email = emailEditText.getText().toString();
                     String password = passwordEditText.getText().toString();
                     String verifyPassword = verifypasswordEditText.getText().toString();
+                    fullname = fullnameEditText.getText().toString();
 
                     email = email.trim();
                     password = password.trim();
                     verifyPassword = verifyPassword.trim();
-
-                    if (email.isEmpty() || password.isEmpty() || verifyPassword.isEmpty()) {
+                    fullname = fullname.trim();
+                    if (email.isEmpty() || password.isEmpty() || verifyPassword.isEmpty() || fullname.isEmpty()) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                         builder.setMessage(R.string.login_error_message)
                                 .setTitle(R.string.login_error_title)
@@ -142,61 +148,51 @@ public class LoginActivity extends AppCompatActivity {
                         loadingProgressBar.setVisibility(View.INVISIBLE);
                     } else {
                         firebaseAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d(TAG, "onCreate: success");
-                                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            Log.d(TAG, "onCreate: success");
+                                            FirebaseUser user = firebaseAuth.getCurrentUser();
 
-                                        // Got below code from https://stackoverflow.com/questions/38114358/firebase-setdisplayname-of-user-while-creating-user-android
-//                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-//                                                .setDisplayName(mName).build();
+                                            // Got below code from https://stackoverflow.com/questions/38114358/firebase-setdisplayname-of-user-while-creating-user-android
+                                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                    .setDisplayName(fullname).build();
 
-//                                        user.updateProfile(profileUpdates)
-//                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                    @Override
-//                                                    public void onComplete(@NonNull Task<Void> task) {
-//                                                        if (task.isSuccessful()) {
-//                                                            Log.d(TAG, "onCreate: Name updated to profile.");
-//                                                        } else {
-//                                                            Log.d(TAG, "onCreate: **FAILURE** Name updated to profile.");
-//                                                        }
-//                                                    }
-//                                                });
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        DocumentReference newUser = db
-                                                .collection("users")
-                                                .document(user.getUid());
-                                        HashMap<String, String> userMap = new HashMap<String, String>();
-                                        userMap.put("user_id", newUser.getId());
-                                        newUser.set(userMap);
-                                        updateUI(user);
-                                    } else {
-                                        // If sign in fails, display a message to the user.
-                                        Log.d(TAG, "onCreate: failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, "Sign up failed. Contact support if persists.", Toast.LENGTH_SHORT).show();
-                                        updateUI(null);
+                                            user.updateProfile(profileUpdates)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Log.d(TAG, "onCreate: Name updated to profile.");
+                                                            } else {
+                                                                Log.d(TAG, "onCreate: **FAILURE** Name updated to profile.");
+                                                            }
+                                                        }
+                                                    });
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            DocumentReference newUser = db
+                                                    .collection("users")
+                                                    .document(user.getUid());
+                                            HashMap<String, String> userMap = new HashMap<String, String>();
+                                            userMap.put("user_id", newUser.getId());
+                                            userMap.put("full_name", fullname);
+                                            newUser.set(userMap);
+                                            Intent intent = new Intent(LoginActivity.this, GroupActivity.class);
+                                            startActivity(intent);
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Log.d(TAG, "onCreate: failure", task.getException());
+                                            Toast.makeText(LoginActivity.this, "Sign up failed. Contact support if persists.", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                            });
+                                });
                     }
                 }
             }
         });
 
     }
-
-    // [START updateUI]
-    // When a user is made in log in from instance, go to main activity logged in.
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-    }
-    // [END updateUI]
-
 
 }
