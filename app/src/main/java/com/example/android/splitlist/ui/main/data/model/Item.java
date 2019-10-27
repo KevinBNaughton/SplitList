@@ -9,6 +9,11 @@ public class Item {
     private int mMasterId;
     private int mLikeNumber;
     private ArrayList<Integer> mUsers;
+    private boolean mCheckout;
+
+    public Item() {
+
+    }
 
     public Item(String name, double price, int id) {
 
@@ -16,6 +21,7 @@ public class Item {
         mPrice = price;
         mMasterId = id;
         mLikeNumber = 1;
+        mCheckout = false;
 
         if (mUsers == null) {
             mUsers = new ArrayList<>();
@@ -64,6 +70,12 @@ public class Item {
 
     public void removeUser(int mUser) {
         mUsers.remove(mUser);
+    }
+
+    public boolean getCheckout() { return mCheckout; }
+
+    public void setCheckout(boolean mCheckout) {
+        this.mCheckout = mCheckout;
     }
 
 }
