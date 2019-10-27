@@ -1,4 +1,4 @@
-package com.example.android.splitlist.ui.main.checkoutList;
+package com.example.android.splitlist.ui.main.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,13 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.android.splitlist.R;
-import com.example.android.splitlist.ui.main.CompleteActivity;
+import com.example.android.splitlist.ui.main.checkoutList.CheckoutListAdapter;
 import com.example.android.splitlist.ui.main.data.model.Item;
-import com.example.android.splitlist.ui.main.groceryList.GroceryListAdapter;
+import com.example.android.splitlist.ui.main.CompleteActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
