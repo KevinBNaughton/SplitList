@@ -48,7 +48,7 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (mLikeListener != null) {
-                    mLikeListener.onItemLiked(mItem); /
+                    mLikeListener.onItemLiked(mItem);
                 }
             }
         });
