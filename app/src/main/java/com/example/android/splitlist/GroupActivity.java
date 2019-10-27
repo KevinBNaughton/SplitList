@@ -121,11 +121,13 @@ public class GroupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
+                                    boolean existed = false;
                                     for (final QueryDocumentSnapshot document : task.getResult()) {
                                         Log.d(TAG, "data: " + document.getData());
                                         Log.d(TAG, "id: " + document.getId());
                                         Map<String, Object> dat = new HashMap<>();
                                         dat.put("user_id", userId);
+                                        existed = true;
                                         final String group_id = document.getId();
                                         db.collection("groups").document(group_id)
                                                 .collection("users").document(userId).set(dat).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -152,6 +154,9 @@ public class GroupActivity extends AppCompatActivity {
                                             }
                                         });
                                         break;
+                                    }
+                                    if (!existed) {
+                                        Toast.makeText(GroupActivity.this, "Group does not exist!", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     Log.e(TAG, "failed");
