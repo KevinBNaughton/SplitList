@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import com.example.android.splitlist.ui.main.ListFragment;
 import com.example.android.splitlist.ui.main.login.LoginActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -35,6 +37,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.security.acl.Group;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -187,6 +194,27 @@ public class MainActivity extends AppCompatActivity {
 
         // [END] Tab Layout
 
+
+        //Checking that user is in a group
+        String user_id = mFirebaseUser.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userRef = db.collection("users").document(user_id);
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        if (document.get("group_id") == null) {
+                            Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        });
+        //END Checking that user is in a group
+
     }
 
     private void NavDrawerMenuSelector(MenuItem item) {
@@ -199,7 +227,8 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.nav_groups: {
                 Toast.makeText(this, "Groups Selected!", Toast.LENGTH_SHORT).show();
-                //VIEW FRIENDS
+                Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_settings: {

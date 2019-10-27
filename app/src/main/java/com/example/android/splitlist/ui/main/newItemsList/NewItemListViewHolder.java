@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.splitlist.R;
 import com.example.android.splitlist.ui.main.ItemClickListener;
+import com.example.android.splitlist.ui.main.data.model.Item;
 
 public class NewItemListViewHolder extends RecyclerView.ViewHolder {
 
     private TextView mItemName;
-    private String mName;
+    private Item mItem;
     private ItemClickListener mItemClickListener;
 
     public NewItemListViewHolder(View v, ItemClickListener clickListener) {
@@ -25,17 +26,17 @@ public class NewItemListViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View inputView) {
                 if (mItemClickListener != null) {
-                    mItemClickListener.onItemRowClick(mName);
+                    mItemClickListener.onItemRowClick(mItem);
                 }
             }
         });
     }
 
-    public void setData(String name) {
+    public void setData(Item item) {
 
-        mName = name;
+        mItem = item;
 
-        mItemName.setText(mName);
+        mItemName.setText(item.getItemName() + ", $" + item.getPrice());
     }
 
 }

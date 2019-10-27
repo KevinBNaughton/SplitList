@@ -9,19 +9,20 @@ import android.widget.RelativeLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.splitlist.R;
+import com.example.android.splitlist.ui.main.data.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroceryListAdapter extends RecyclerView.Adapter<GroceryViewHolder> {
 
-    private List<String> mGroceryList;
+    private List<Item> mGroceryList;
     private DeleteItemListener mDeleteListener;
     private LikeItemListener mLikeListener;
     private SwipeItemListener mSwipeListener;
     private Context mContext;
 
-    public GroceryListAdapter(Context context, ArrayList<String> groceryList) {
+    public GroceryListAdapter(Context context, ArrayList<Item> groceryList) {
         mGroceryList = groceryList;
         mContext = context;
     }
@@ -39,9 +40,9 @@ public class GroceryListAdapter extends RecyclerView.Adapter<GroceryViewHolder> 
     public void onBindViewHolder(GroceryViewHolder holder, int position) {
 
         if (mGroceryList != null && mGroceryList.size() > position) {
-            String grocery = mGroceryList.get(position);
+            Item item = mGroceryList.get(position);
 
-            holder.setData(grocery);
+            holder.setData(item);
             Log.d("Set the data", "yeah");
         }
     }

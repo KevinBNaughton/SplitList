@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.splitlist.R;
+import com.example.android.splitlist.ui.main.data.model.Item;
 
 public class GroceryViewHolder extends RecyclerView.ViewHolder {
 
@@ -17,7 +18,7 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
     private LikeItemListener mLikeListener;
     private SwipeItemListener mSwipeListener;
 
-    private String mName;
+    private Item mItem;
     private Context mContext;
 
     public GroceryViewHolder(Context context, View v, DeleteItemListener deleteListener, LikeItemListener likeListener, SwipeItemListener swipeListener) {
@@ -37,7 +38,7 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (mDeleteListener != null) {
-                    mDeleteListener.onItemDelete(mName); //TODO: needs to be refactored to take in an object
+                    mDeleteListener.onItemDelete(mItem);
                 }
             }
         });
@@ -47,7 +48,7 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 if (mLikeListener != null) {
-                    mLikeListener.onItemLiked(mName); //TODO: needs to refactor to an object
+                    mLikeListener.onItemLiked(mItem);
                 }
             }
         });
@@ -59,13 +60,13 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
             public void onSwipeRight() {
 
                 if (mSwipeListener != null) {
-                    mSwipeListener.moveToCheckout(mName); //TODO: refact to use objects
+                    mSwipeListener.moveToCheckout(mItem);
                 }
 
             }
             public void onSwipeLeft() {
                 if (mSwipeListener != null) {
-                    mSwipeListener.moveToCheckout(mName); //TODO: refact to use objects
+                    mSwipeListener.moveToCheckout(mItem);
                 }
             }
 //            public void onSwipeBottom() {
@@ -76,12 +77,12 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void setData(String name) {
+    public void setData(Item item) {
 
-        mName = name;
+        mItem = item;
 
-        mItemName.setText(name);
-        mLikes.setText("1");
+        mItemName.setText(item.getItemName() + ", $" + item.getPrice());
+        mLikes.setText(String.valueOf(item.getLikeNumber()));
     }
 
 }
