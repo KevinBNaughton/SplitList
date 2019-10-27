@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.splitlist.R;
 import com.example.android.splitlist.ui.main.ItemClickListener;
+import com.example.android.splitlist.ui.main.data.model.Item;
 import com.example.android.splitlist.ui.main.groceryList.GroceryListAdapter;
 import com.example.android.splitlist.ui.main.newItemsList.NewItemAdapter;
 
@@ -30,7 +31,7 @@ public class NewItemDialog extends DialogFragment {
 
     private RecyclerView mRecyclerView;
 
-    private ArrayList<String> mNewItems;
+    private ArrayList<Item> mNewItems;
 
     private NewItemAdapter mNewItemsAdapter;
 
@@ -83,29 +84,21 @@ public class NewItemDialog extends DialogFragment {
     }
 
     private void popuplateList() {
-        mNewItems.add("PLEASE");
-        mNewItems.add("WORK");
-        mNewItems.add("BUYFOODS");
-        mNewItems.add("PLEASE");
-        mNewItems.add("WORK");
-        mNewItems.add("BUYFOODS");
-        mNewItems.add("PLEASE");
-        mNewItems.add("WORK");
-        mNewItems.add("BUYFOODS");
-        mNewItems.add("PLEASE");
-        mNewItems.add("WORK");
-        mNewItems.add("BUYFOODS");
-        mNewItems.add("PLEASE");
-        mNewItems.add("WORK");
-        mNewItems.add("BUYFOODS");
+
+        mNewItems.add(new Item("Milk", 6.00, 102578, 1920845));
+        mNewItems.add(new Item("Water", 2.75, 102578, 1920845));
+        mNewItems.add(new Item("Eggs", 97.56, 102578, 1920845));
+        mNewItems.add(new Item("Coffee", 5.30, 102578, 1920845));
+        mNewItems.add(new Item("School Textbook", 134.89, 102578, 1920845));
+        mNewItems.add(new Item("Computer", 2.10, 102578, 1920845));
 
         mNewItemsAdapter.notifyDataSetChanged();
     }
 
     class OnRowClickHandler extends ItemClickListener {
         @Override
-        public void onItemRowClick(String name) {
-            mDialogResult.finish(name);
+        public void onItemRowClick(Item item) {
+            mDialogResult.finish(item);
 
             dismiss();
         }
@@ -116,7 +109,7 @@ public class NewItemDialog extends DialogFragment {
     }
 
     public interface OnMyDialogResult{
-        void finish(String result);
+        void finish(Item item);
     }
 
 }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.splitlist.R;
+import com.example.android.splitlist.ui.main.data.model.Item;
 import com.example.android.splitlist.ui.main.groceryList.DeleteItemListener;
 import com.example.android.splitlist.ui.main.groceryList.GroceryListAdapter;
 import com.example.android.splitlist.ui.main.groceryList.LikeItemListener;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 public class ListFragment extends Fragment {
      private static final String TAG = "ListFragment";
      private RecyclerView mRecyclerView;
-     private ArrayList<Items> mGroceryList = new ArrayList<>();
+     private ArrayList<Item> mGroceryList = new ArrayList<>();
      private GroceryListAdapter mListAdapter;
      private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -74,15 +75,14 @@ public class ListFragment extends Fragment {
         mListAdapter.setListenerCallbacks(new OnDeleteListenerHandler(), new OnLikeListenerHandler(), new OnSwipeListenerHandler());
     }
 
-    public void addItem(String itemName) {
-        mGroceryList.add(itemName);
+    public void addItem(Item item) {
+        mGroceryList.add(item);
 
         mListAdapter.notifyDataSetChanged();
     }
 
-    //TODO: refactor to remove an object
-    public void removeItem(String name) {
-        mGroceryList.remove(name);
+    public void removeItem(Item item) {
+        mGroceryList.remove(item);
 
         mListAdapter.notifyDataSetChanged();
     }
@@ -92,41 +92,38 @@ public class ListFragment extends Fragment {
         dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.dialog_new_item));
 
         dialog.setDialogResult(new NewItemDialog.OnMyDialogResult(){
-            public void finish(String result){
-                addItem(result);
+            public void finish(Item item){
+                addItem(item);
             }
         });
     }
 
     class OnDeleteListenerHandler extends DeleteItemListener {
         @Override
-        public void onItemDelete(String name) {
+        public void onItemDelete(Item item) {
             Log.d("ListFragment", "Is hitting the remove click method");
             //TODO: popup check
-            removeItem(name);
+            removeItem(item);
         }
     }
 
     class OnLikeListenerHandler extends LikeItemListener {
         @Override
-        public void onItemLiked(String name) {
+        public void onItemLiked(Item item) {
             Log.d("ListFragment", "Is hitting the heart click method");
 
-            addItem("THE LIKE BUTTON WORKS");
-            //TODO: method to update something
+            //TODO: method to update something - works
         }
     }
 
     class OnSwipeListenerHandler extends SwipeItemListener {
         @Override
-        public void moveToCheckout(String name) {
+        public void moveToCheckout(Item item) {
 
             Log.d("ListFragment", "Is hitting the swipe listener method");
 
-            //TODO: move to checkout list
-            addItem("RIGHT SWIPE DO WORKKKK");
-
-            removeItem(name);
+            //TODO: this swipe listener doesnt work
+            removeItem(item);
         }
     }
 }
