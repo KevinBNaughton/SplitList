@@ -3,6 +3,7 @@ package com.example.android.splitlist;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.android.splitlist.ui.main.JoinGroupDialog;
 import com.example.android.splitlist.ui.main.NewGroupDialog;
+import com.example.android.splitlist.ui.main.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,14 +67,31 @@ public class GroupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()) {
-                                    String group_id = newGroupRef.getId();
+                                    final String group_id = newGroupRef.getId();
                                     Map<String, Object> dat = new HashMap<>();
                                     dat.put("user_id", userId);
                                     db.collection("groups").document(group_id)
                                             .collection("users").document(userId).set(dat).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Log.d(TAG, "Somehow, it worked");
+                                            if (task.isSuccessful()) {
+                                                Map<String, Object> da = new HashMap<>();
+                                                da.put("group_id", group_id);
+                                                db.collection("users").document(userId).update(da).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Log.d(TAG, "Somehow, it worked");
+                                                            Intent intent = new Intent(GroupActivity.this, MainActivity.class);
+                                                            startActivity(intent);
+                                                        } else {
+                                                            Log.e(TAG, "error");
+                                                        }
+                                                    }
+                                                });
+                                            } else {
+                                                Log.e(TAG, "error");
+                                            }
                                         }
                                     });
                                 } else{
@@ -102,19 +121,42 @@ public class GroupActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                    boolean existed = false;
+                                    for (final QueryDocumentSnapshot document : task.getResult()) {
                                         Log.d(TAG, "data: " + document.getData());
                                         Log.d(TAG, "id: " + document.getId());
                                         Map<String, Object> dat = new HashMap<>();
                                         dat.put("user_id", userId);
-                                        db.collection("groups").document(document.getId())
+                                        existed = true;
+                                        final String group_id = document.getId();
+                                        db.collection("groups").document(group_id)
                                                 .collection("users").document(userId).set(dat).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                Log.d(TAG, "Somehow, it worked");
+                                                if (task.isSuccessful()) {
+                                                    Map<String, Object> da = new HashMap<>();
+                                                    da.put("group_id", group_id);
+                                                    db.collection("users").document(userId).update(da).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                Log.d(TAG, "Somehow, it worked");
+                                                                Intent intent = new Intent(GroupActivity.this, MainActivity.class);
+                                                                startActivity(intent);
+                                                            } else {
+                                                                Log.e(TAG, "error");
+                                                            }
+                                                        }
+                                                    });
+                                                } else {
+                                                    Log.e(TAG, "error");
+                                                }
                                             }
                                         });
                                         break;
+                                    }
+                                    if (!existed) {
+                                        Toast.makeText(GroupActivity.this, "Group does not exist!", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     Log.e(TAG, "failed");
