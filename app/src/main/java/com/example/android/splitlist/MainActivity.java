@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // [END] Tab Layout
-
+        mProfileName.setText(mFirebaseUser.getDisplayName());
 
         //Checking that user is in a group
         String user_id = mFirebaseUser.getUid();
