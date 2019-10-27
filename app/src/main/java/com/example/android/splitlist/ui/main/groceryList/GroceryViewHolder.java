@@ -34,16 +34,26 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
         mSwipeListener = swipeListener;
 
         ImageButton delete = v.findViewById(R.id.cancel_button);
+
+        ImageButton likeButton = v.findViewById(R.id.heart_button);
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mDeleteListener != null) {
+
+                    mItem.setLikeNumber(mItem.getLikeNumber() - 1);
+
+                    if (mItem.getLikeNumber() > 0) {
+//                        likeButton.setImageResource(R.mipmap.heart_unfilled_icon);
+                        mLikes.setText(String.valueOf(mItem.getLikeNumber()));
+                    }
+
                     mDeleteListener.onItemDelete(mItem);
                 }
             }
         });
 
-        ImageButton likeButton = v.findViewById(R.id.heart_button);
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -223,9 +223,32 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case R.id.nav_groups: {
-                Toast.makeText(this, "Groups Selected!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(MainActivity.this, GroupActivity.class);
-                startActivity(intent);
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("users").document(mFirebaseUser.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            final DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                String group_id = document.getString("group_id");
+                                db.collection("groups").document(group_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot documentSnapshot = task.getResult();
+                                            if (documentSnapshot.exists()) {
+                                                String group_name = documentSnapshot.getString("group_name");
+                                                Toast.makeText(MainActivity.this, "You are in group \"" + group_name +  "\"!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+                //Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+                //startActivity(intent);
                 break;
             }
             case R.id.nav_settings: {

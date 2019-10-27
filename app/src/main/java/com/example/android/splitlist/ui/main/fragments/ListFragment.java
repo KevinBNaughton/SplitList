@@ -170,8 +170,11 @@ public class ListFragment extends Fragment {
         @Override
         public void onItemDelete(Item item) {
             Log.d("ListFragment", "Is hitting the remove click method");
-            //TODO: popup check
-            removeItem(item);
+
+            if (item.getLikeNumber() == 0) {
+                //TODO: popup check
+                removeItem(item);
+            }
         }
     }
 
@@ -179,8 +182,6 @@ public class ListFragment extends Fragment {
         @Override
         public void onItemLiked(Item item) {
             Log.d("ListFragment", "Is hitting the heart click method");
-
-            //TODO: method to update something - works
         }
     }
 
