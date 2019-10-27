@@ -141,6 +141,7 @@ public class ListFragment extends Fragment {
     }
 
     public void addItem(Item item) {
+        item.addUser(mFirebaseUser.getUid());
         mGroceryList.add(item);
         mListAdapter.notifyDataSetChanged();
 

@@ -8,11 +8,13 @@ public class Item {
     private double mPrice;
     private int mMasterId;
     private int mLikeNumber;
-    private ArrayList<Integer> mUsers;
+    private ArrayList<String> mUsers;
     private boolean mCheckout;
 
     public Item() {
-
+        if (mUsers == null) {
+            mUsers = new ArrayList<>();
+        }
     }
 
     public Item(String name, double price, int id) {
@@ -60,15 +62,15 @@ public class Item {
         this.mLikeNumber = mLikeNumber;
     }
 
-    public ArrayList<Integer> getUsers() {
+    public ArrayList<String> getUsers() {
         return mUsers;
     }
 
-    public void addUser(int mUser) {
+    public void addUser(String mUser) {
         mUsers.add(mUser);
     }
 
-    public void removeUser(int mUser) {
+    public void removeUser(String mUser) {
         mUsers.remove(mUser);
     }
 
