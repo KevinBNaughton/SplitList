@@ -1,6 +1,8 @@
 package com.example.android.splitlist.ui.main.groceryList;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,23 +36,46 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
         mSwipeListener = swipeListener;
 
         ImageButton delete = v.findViewById(R.id.cancel_button);
+
+        final ImageButton likeButton = v.findViewById(R.id.heart_button);
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mDeleteListener != null) {
-                    mDeleteListener.onItemDelete(mItem);
-                }
+
+                    //TODO: put in logic to check if the user is currently buying the list before they can remove it
+
+                        mItem.setLikeNumber(mItem.getLikeNumber() - 1);
+
+                        if (mItem.getLikeNumber() > 0) {
+                            likeButton.setImageResource(R.mipmap.heart_empty_icon);
+                            mLikes.setTextColor(Color.BLACK);
+                            mLikes.setText(String.valueOf(mItem.getLikeNumber()));
+                        }
+
+                        mDeleteListener.onItemDelete(mItem);
+                    }
             }
         });
 
-        ImageButton likeButton = v.findViewById(R.id.heart_button);
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLikeListener != null) {
-                    mLikeListener.onItemLiked(mItem);
+
+                    //TODO: put in logic to make sure that users are not currently buying it before this logic runs
+
+                        mItem.setLikeNumber(mItem.getLikeNumber() + 1);
+
+                        likeButton.setImageResource(R.mipmap.heart_filled_icon);
+
+                        mLikes.setTextColor(Color.WHITE);
+                        mLikes.setText(String.valueOf(mItem.getLikeNumber()));
+
+                        mLikeListener.onItemLiked(mItem);
+                    }
                 }
-            }
         });
 
         v.setOnTouchListener(new OnSwipeTouchListener(mContext) {

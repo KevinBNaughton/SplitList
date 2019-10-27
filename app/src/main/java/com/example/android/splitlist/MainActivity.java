@@ -3,8 +3,9 @@ package com.example.android.splitlist;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.android.splitlist.ui.main.ListFragment;
-import com.example.android.splitlist.ui.main.checkoutList.CheckoutFragment;
+import com.example.android.splitlist.ui.main.fragments.FavoriteFragment;
+import com.example.android.splitlist.ui.main.fragments.ListFragment;
+import com.example.android.splitlist.ui.main.fragments.CheckoutFragment;
 import com.example.android.splitlist.ui.main.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         CheckoutFragment checkout = new CheckoutFragment();
         checkout.setArguments(b);
         mTabAdapter.addFragment(checkout, "Checkout", tabIcons[1]);
-        ListFragment favorites =  new ListFragment();
+        FavoriteFragment favorites =  new FavoriteFragment();
         favorites.setArguments(b);
         mTabAdapter.addFragment(favorites, "Favorites", tabIcons[2]);
         mViewPager.setAdapter(mTabAdapter);
