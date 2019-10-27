@@ -4,44 +4,58 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<androidx.recyclerview.widget.RecyclerView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/checkout_recyclerview">
-</androidx.recyclerview.widget.RecyclerView>
-
-    <TextView
-        android:id="@+id/group_total"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:text="Group Total: "
-        android:textColor="@color/Black"
-        android:textSize="16sp"
-        android:layout_margin="@dimen/normal_margin" />
+        android:id="@+id/relative_layout">
 
-    <TextView
-        android:id="@+id/personal_total"
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkout_recyclerview">
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="Your Total: "
-        android:textColor="@color/Black"
-        android:textSize="16sp"
-        android:layout_margin="@dimen/normal_margin" />
+        android:layout_below="@+id/relative_layout">
 
-    <Button
-        android:id="@+id/complete_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="2dp"
-        android:layout_toStartOf="@+id/personal_total"
-        android:layout_toEndOf="@+id/group_total"
-        android:text="Finalize" />
+        <TextView
+            android:id="@+id/group_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:text="Group Total: "
+            android:textColor="@color/Black"
+            android:textSize="16sp"
+            android:layout_margin="@dimen/normal_margin" />
+
+        <TextView
+            android:id="@+id/personal_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:text="Your Total: "
+            android:textColor="@color/Black"
+            android:textSize="16sp"
+            android:layout_margin="@dimen/normal_margin" />
+
+        <Button
+            android:id="@+id/complete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="2dp"
+            android:layout_toStartOf="@+id/personal_total"
+            android:layout_toEndOf="@+id/group_total"
+            android:text="Finalize" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
