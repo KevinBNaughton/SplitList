@@ -1,6 +1,7 @@
 package com.example.android.splitlist;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.android.splitlist.ui.main.ListFragment;
@@ -10,6 +11,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -18,12 +23,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -55,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.ic_favorites
     };
 
+    private Bundle b = new Bundle();
 
 
     @Override
@@ -87,6 +98,46 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void init() {
+        OkHttpClient client = new OkHttpClient();
+        b.putString("baseUrl", "https://api-reg-apigee.ncrsilverlab.com");
+
+        Request tokenRequest = new Request.Builder()
+                .url(b.get("baseUrl") + "/v2/oauth2/token")
+                .header("client_id", "gt_552465")
+                .header("client_secret", "00340075-0043-0050-7600-260041005200")
+                .build();
+
+        client.newCall(tokenRequest).
+                enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            String myResponse = response.body().string();
+                            try {
+                                JSONObject reader = new JSONObject(myResponse);
+                                JSONObject result = reader.getJSONObject("Result");
+                                b.putString("token", result.getString("AccessToken"));
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        fragmentHelper();
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void fragmentHelper() {
         // [START] Navigation Drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawable_layout);
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -114,10 +165,16 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         mTabAdapter = new TabAdapter(getSupportFragmentManager(), this);
-        mTabAdapter.addFragment(new ListFragment(), "List", tabIcons[0]);
-        mTabAdapter.addFragment(new CheckoutFragment(), "Checkout", tabIcons[1]);
-        mTabAdapter.addFragment(new ListFragment(), "Favorites", tabIcons[2]);
 
+        ListFragment list = new ListFragment();
+        list.setArguments(b);
+        mTabAdapter.addFragment(list, "List", tabIcons[0]);
+        CheckoutFragment checkout = new CheckoutFragment();
+        checkout.setArguments(b);
+        mTabAdapter.addFragment(checkout, "Checkout", tabIcons[1]);
+        ListFragment favorites =  new ListFragment();
+        favorites.setArguments(b);
+        mTabAdapter.addFragment(favorites, "Favorites", tabIcons[2]);
         mViewPager.setAdapter(mTabAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         highLightCurrentTab(0);
@@ -134,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // [END] Tab Layout
-
+        mProfileName.setText(mFirebaseUser.getDisplayName());
 
         //Checking that user is in a group
         String user_id = mFirebaseUser.getUid();
@@ -205,7 +262,5 @@ public class MainActivity extends AppCompatActivity {
         tab.setCustomView(null);
         tab.setCustomView(mTabAdapter.getSelectedTabView(position));
     }
-
-
 
 }
