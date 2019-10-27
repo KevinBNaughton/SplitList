@@ -42,6 +42,8 @@ public class GroceryListAdapter extends RecyclerView.Adapter<GroceryViewHolder> 
         if (mGroceryList != null && mGroceryList.size() > position) {
             Item item = mGroceryList.get(position);
 
+            ArrayList<String> list = item.getUsers();
+
             holder.setData(item);
             Log.d("Set the data", "yeah");
         }

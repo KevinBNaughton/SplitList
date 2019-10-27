@@ -22,6 +22,7 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
 
     private Item mItem;
     private Context mContext;
+    private boolean liked;
 
     public GroceryViewHolder(Context context, View v, DeleteItemListener deleteListener, LikeItemListener likeListener, SwipeItemListener swipeListener) {
         super(v);
@@ -35,9 +36,12 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
         mLikeListener = likeListener;
         mSwipeListener = swipeListener;
 
+        liked = true;
+
         ImageButton delete = v.findViewById(R.id.cancel_button);
 
         final ImageButton likeButton = v.findViewById(R.id.heart_button);
+
 
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +70,23 @@ public class GroceryViewHolder extends RecyclerView.ViewHolder {
 
                     //TODO: put in logic to make sure that users are not currently buying it before this logic runs
 
-                        mItem.setLikeNumber(mItem.getLikeNumber() + 1);
+                        if (liked) {
+                            liked = false;
+                            mItem.setLikeNumber(mItem.getLikeNumber() - 1);
+                        } else {
+                            liked = true;
+                            mItem.setLikeNumber(mItem.getLikeNumber() + 1);
+                        }
 
-                        likeButton.setImageResource(R.mipmap.heart_filled_icon);
-
-                        mLikes.setTextColor(Color.WHITE);
-                        mLikes.setText(String.valueOf(mItem.getLikeNumber()));
+                        if (mItem.getLikeNumber() == 0) {
+                            likeButton.setImageResource(R.mipmap.heart_empty_icon);
+                            mLikes.setTextColor(Color.BLACK);
+                            mLikes.setText(String.valueOf(mItem.getLikeNumber()));
+                        } else {
+                            likeButton.setImageResource(R.mipmap.heart_filled_icon);
+                            mLikes.setTextColor(Color.WHITE);
+                            mLikes.setText(String.valueOf(mItem.getLikeNumber()));
+                        }
 
                         mLikeListener.onItemLiked(mItem);
                     }
