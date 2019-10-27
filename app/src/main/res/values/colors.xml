@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#008080</color>
+    <color name="colorPrimaryDark">#F0008472</color>
+    <color name="colorAccent">#40C9A2</color>
+    <color name="Mint">#98ff98</color>
     <color name="White">#E8F7EE</color>
     <color name="Black">#001021</color>
+    <color name="linkBlue">#007FFF</color>
+
+    <color name="PurpleLove0">#cc2b5e</color>
+    <color name="PurpleLove1">#753A88</color>
 
 </resources>

@@ -1,10 +1,7 @@
 package com.example.android.splitlist.ui.main;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,30 +12,48 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.android.splitlist.R;
+import com.example.android.splitlist.ui.main.data.model.Item;
+import com.example.android.splitlist.ui.main.groceryList.DeleteItemListener;
+import com.example.android.splitlist.ui.main.groceryList.GroceryListAdapter;
+import com.example.android.splitlist.ui.main.groceryList.LikeItemListener;
+import com.example.android.splitlist.ui.main.groceryList.SwipeItemListener;
+import com.example.android.splitlist.ui.main.newItemsList.NewItemDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class ListFragment extends Fragment {
      private static final String TAG = "ListFragment";
      private RecyclerView mRecyclerView;
-     private ArrayList<String> mGroceryList = new ArrayList<>();
+     private ArrayList<Item> mGroceryList = new ArrayList<>();
      private GroceryListAdapter mListAdapter;
      private SwipeRefreshLayout mSwipeRefreshLayout;
+     private Bundle b;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
 
+        b = this.getArguments();
+
         mRecyclerView = view.findViewById(R.id.list_recyclerview);
 
-        setUpList();
+        FloatingActionButton fab = view.findViewById(R.id.fab);
 
-        addTestItem();
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newItemDialog();
+            }
+        });
+
+        setUpList();
 
         return view;
     }
@@ -49,7 +64,6 @@ public class ListFragment extends Fragment {
 
         setUpList();
 
-        addTestItem();
     }
 
     private void setUpList() {
@@ -62,17 +76,62 @@ public class ListFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
 
         mGroceryList = new ArrayList<>();
-        mListAdapter = new GroceryListAdapter(mGroceryList);
+        mListAdapter = new GroceryListAdapter(getContext(), mGroceryList);
         mRecyclerView.setAdapter(mListAdapter);
 
-        //TODO: set a swipe listener
-
+        mListAdapter.setListenerCallbacks(new OnDeleteListenerHandler(), new OnLikeListenerHandler(), new OnSwipeListenerHandler());
     }
 
-    private void addTestItem() {
-        mGroceryList.add("Milk!");
-        mGroceryList.add("Eggs!");
+    public void addItem(Item item) {
+        mGroceryList.add(item);
 
         mListAdapter.notifyDataSetChanged();
+    }
+
+    public void removeItem(Item item) {
+        mGroceryList.remove(item);
+
+        mListAdapter.notifyDataSetChanged();
+    }
+
+    private void newItemDialog() {
+        NewItemDialog dialog = new NewItemDialog();
+        dialog.setArguments(b);
+        dialog.show(getActivity().getSupportFragmentManager(), getString(R.string.dialog_new_item));
+
+        dialog.setDialogResult(new NewItemDialog.OnMyDialogResult(){
+            public void finish(Item item){
+                addItem(item);
+            }
+        });
+    }
+
+    class OnDeleteListenerHandler extends DeleteItemListener {
+        @Override
+        public void onItemDelete(Item item) {
+            Log.d("ListFragment", "Is hitting the remove click method");
+            //TODO: popup check
+            removeItem(item);
+        }
+    }
+
+    class OnLikeListenerHandler extends LikeItemListener {
+        @Override
+        public void onItemLiked(Item item) {
+            Log.d("ListFragment", "Is hitting the heart click method");
+
+            //TODO: method to update something - works
+        }
+    }
+
+    class OnSwipeListenerHandler extends SwipeItemListener {
+        @Override
+        public void moveToCheckout(Item item) {
+
+            Log.d("ListFragment", "Is hitting the swipe listener method");
+
+            //TODO: this swipe listener doesnt work
+            removeItem(item);
+        }
     }
 }

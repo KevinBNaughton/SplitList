@@ -1,11 +1,20 @@
 package com.example.android.splitlist;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.android.splitlist.ui.main.ListFragment;
+import com.example.android.splitlist.ui.main.login.LoginActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -15,14 +24,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.security.acl.Group;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+
+
+    FirebaseAuth mFirebaseAuth;
+    FirebaseUser mFirebaseUser;
 
     //Navigation Draw
     private NavigationView mNavigationView;
@@ -42,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.ic_favorites
     };
 
+    private Bundle b = new Bundle();
 
 
     @Override
@@ -51,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // *** This is for checking if user is logged in on app launch, enable later
-        /*
+
         // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -63,18 +90,57 @@ public class MainActivity extends AppCompatActivity {
             // Load it up.
             init();
         }
-        */
+    }
 
-        // [START] Default Tabs
-//        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-//        ViewPager viewPager = findViewById(R.id.view_pager);
-//        viewPager.setAdapter(sectionsPagerAdapter);
-//        TabLayout tabs = findViewById(R.id.tabs);
-//        tabs.setupWithViewPager(viewPager);
-//        FloatingActionButton fab = findViewById(R.id.fab);
-        // [END] Default Tabs
+    private void loadLogInView() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
 
 
+    private void init() {
+        OkHttpClient client = new OkHttpClient();
+        b.putString("baseUrl", "https://api-reg-apigee.ncrsilverlab.com");
+
+        Request tokenRequest = new Request.Builder()
+                .url(b.get("baseUrl") + "/v2/oauth2/token")
+                .header("client_id", "gt_552465")
+                .header("client_secret", "00340075-0043-0050-7600-260041005200")
+                .build();
+
+        client.newCall(tokenRequest).
+                enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Request request, IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Response response) throws IOException {
+                        if (response.isSuccessful()) {
+                            String myResponse = response.body().string();
+                            try {
+                                JSONObject reader = new JSONObject(myResponse);
+                                JSONObject result = reader.getJSONObject("Result");
+                                b.putString("token", result.getString("AccessToken"));
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        fragmentHelper();
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void fragmentHelper() {
         // [START] Navigation Drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawable_layout);
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -101,20 +167,53 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewPager);
         mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        mTabAdapter = new TabAdapter(getSupportFragmentManager(), this);
-        mTabAdapter.addFragment(new ListFragment(), "List", tabIcons[0]);
-        mTabAdapter.addFragment(new ListFragment(), "Checkout", tabIcons[1]);
-        mTabAdapter.addFragment(new ListFragment(), "Favorites", tabIcons[2]);
-
+        mTabAdapter = new TabAdapter(getSupportFragmentManager(), getApplicationContext());
+        ListFragment list = new ListFragment();
+        list.setArguments(b);
+        mTabAdapter.addFragment(list, "List", tabIcons[0]);
+//        ListFragment checkout = new ListFragment();
+//        list.setArguments(b);
+//        mTabAdapter.addFragment(checkout, "Checkout", tabIcons[1]);
+//        ListFragment favorites =  new ListFragment();
+//        favorites.setArguments(b);
+//        mTabAdapter.addFragment(favorites, "Favorites", tabIcons[2]);
         mViewPager.setAdapter(mTabAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         highLightCurrentTab(0);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            @Override
+            public void onPageSelected(int position) {
+                highLightCurrentTab(position);
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) { }
+        });
+
         // [END] Tab Layout
+        mProfileName.setText(mFirebaseUser.getDisplayName());
 
-
-
-
-
+        //Checking that user is in a group
+        String user_id = mFirebaseUser.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userRef = db.collection("users").document(user_id);
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        if (document.get("group_id") == null) {
+                            Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                }
+            }
+        });
+        //END Checking that user is in a group
 
     }
 
@@ -128,7 +227,8 @@ public class MainActivity extends AppCompatActivity {
             }
             case R.id.nav_groups: {
                 Toast.makeText(this, "Groups Selected!", Toast.LENGTH_SHORT).show();
-                //VIEW FRIENDS
+                Intent intent = new Intent(MainActivity.this, GroupActivity.class);
+                startActivity(intent);
                 break;
             }
             case R.id.nav_settings: {
@@ -137,13 +237,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case R.id.nav_logout: {
-                Toast.makeText(this, "Logout Selected!", Toast.LENGTH_SHORT).show();
-                //SIGN OUT
-                //signOut();
+                //Toast.makeText(this, "Logout Selected!", Toast.LENGTH_SHORT).show();
+                //LOG OUT
+                logOut();
                 break;
             }
         }
 
+    }
+
+    private void logOut() {
+        // Firebase sign out
+        mFirebaseAuth.signOut();
+        loadLogInView();
     }
 
     //Position of tab, 0 1 or 2.
@@ -158,7 +264,5 @@ public class MainActivity extends AppCompatActivity {
         tab.setCustomView(null);
         tab.setCustomView(mTabAdapter.getSelectedTabView(position));
     }
-
-
 
 }
