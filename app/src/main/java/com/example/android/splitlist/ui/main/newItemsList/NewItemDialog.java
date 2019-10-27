@@ -1,6 +1,8 @@
 package com.example.android.splitlist.ui.main.newItemsList;
 
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import com.example.android.splitlist.ui.main.ItemClickListener;
 import com.example.android.splitlist.ui.main.data.model.Item;
 import com.example.android.splitlist.ui.main.groceryList.GroceryListAdapter;
 import com.example.android.splitlist.ui.main.newItemsList.NewItemAdapter;
+import com.google.android.material.tabs.TabLayout;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -37,6 +40,7 @@ import java.util.ArrayList;
  */
 
 public class NewItemDialog extends DialogFragment {
+    private static final String TAG = "DialogFragment";
 
     private RecyclerView mRecyclerView;
 
@@ -128,21 +132,18 @@ public class NewItemDialog extends DialogFragment {
                                     newItem.getDouble("RetailPrice"),
                                     newItem.getInt("ItemMasterId")));
                         }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mNewItemsAdapter.notifyDataSetChanged();
+                            }
+                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
-
-        mNewItems.add(new Item("Milk", 6.00, 102578, 1920845));
-        mNewItems.add(new Item("Water", 2.75, 102578, 1920845));
-        mNewItems.add(new Item("Eggs", 97.56, 102578, 1920845));
-        mNewItems.add(new Item("Coffee", 5.30, 102578, 1920845));
-        mNewItems.add(new Item("School Textbook", 134.89, 102578, 1920845));
-        mNewItems.add(new Item("Computer", 2.10, 102578, 1920845));
-
-        mNewItemsAdapter.notifyDataSetChanged();
     }
 
     class OnRowClickHandler extends ItemClickListener {
