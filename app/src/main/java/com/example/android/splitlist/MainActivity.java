@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.android.splitlist.ui.main.ListFragment;
+import com.example.android.splitlist.ui.main.checkoutList.CheckoutFragment;
 import com.example.android.splitlist.ui.main.login.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,8 +29,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.security.acl.Group;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -118,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         mTabAdapter = new TabAdapter(getSupportFragmentManager(), this);
         mTabAdapter.addFragment(new ListFragment(), "List", tabIcons[0]);
-        mTabAdapter.addFragment(new ListFragment(), "Checkout", tabIcons[1]);
+        mTabAdapter.addFragment(new CheckoutFragment(), "Checkout", tabIcons[1]);
         mTabAdapter.addFragment(new ListFragment(), "Favorites", tabIcons[2]);
 
         mViewPager.setAdapter(mTabAdapter);
