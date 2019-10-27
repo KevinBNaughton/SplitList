@@ -1,5 +1,7 @@
 package com.example.android.splitlist.ui.main.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,7 +28,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -172,8 +173,7 @@ public class ListFragment extends Fragment {
             Log.d("ListFragment", "Is hitting the remove click method");
 
             if (item.getLikeNumber() == 0) {
-                //TODO: popup check
-                removeItem(item);
+                checkForDelete(item);
             }
         }
     }
@@ -191,8 +191,32 @@ public class ListFragment extends Fragment {
 
             Log.d("ListFragment", "Is hitting the swipe listener method");
 
-            //TODO: this swipe listener doesnt work
+            //TODO: this swipe listener doesn't work
             removeItem(item);
         }
+    }
+
+    public void checkForDelete(final Item item){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+
+        alertDialogBuilder.setMessage("Are you sure that you want to remove this item from your group's shopping list?");
+        alertDialogBuilder.setPositiveButton("yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        removeItem(item);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
