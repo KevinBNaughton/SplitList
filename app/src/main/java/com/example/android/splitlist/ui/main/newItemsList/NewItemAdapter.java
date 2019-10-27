@@ -9,17 +9,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.splitlist.R;
 import com.example.android.splitlist.ui.main.ItemClickListener;
+import com.example.android.splitlist.ui.main.data.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NewItemAdapter extends RecyclerView.Adapter<NewItemListViewHolder> {
 
-    private List<String> mNewItemList;
+    private List<Item> mNewItemList;
 
     private ItemClickListener mItemClickListener;
 
-    public NewItemAdapter(ArrayList<String> groceryList) {
+    public NewItemAdapter(ArrayList<Item> groceryList) {
         mNewItemList = groceryList;
     }
 
@@ -36,9 +37,9 @@ public class NewItemAdapter extends RecyclerView.Adapter<NewItemListViewHolder> 
     public void onBindViewHolder(NewItemListViewHolder holder, int position) {
 
         if (mNewItemList != null && mNewItemList.size() > position) {
-            String grocery = mNewItemList.get(position);
+            Item item = mNewItemList.get(position);
 
-            holder.setData(grocery);
+            holder.setData(item);
             Log.d("Set the data", "yeah");
         }
     }
