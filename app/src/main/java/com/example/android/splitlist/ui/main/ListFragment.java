@@ -100,7 +100,7 @@ public class ListFragment extends Fragment {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         Log.d(TAG, "we adding the document successful");
                                         Item item = document.toObject(Item.class);
-                                        addItem(item);
+                                        mGroceryList.add(item);
                                         mListAdapter.notifyDataSetChanged();
                                     }
                                 }
